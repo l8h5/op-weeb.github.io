@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weed System - Dream Store</title>
+    <link rel="stylesheet" href="kjl.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h2>Dream Store</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="product-detail">
+        <div class="container">
+            <div class="product-detail-grid">
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="https://via.placeholder.com/600x400/4361ee/ffffff?text=Weed+System+Preview" alt="Weed System" id="main-product-image">
+                    </div>
+                    <div class="image-thumbnails">
+                        <div class="thumbnail active" data-image="https://via.placeholder.com/600x400/4361ee/ffffff?text=Weed+System+Preview">
+                            <img src="https://via.placeholder.com/100x80/4361ee/ffffff?text=1" alt="Thumbnail 1">
+                        </div>
+                        <div class="thumbnail" data-image="https://via.placeholder.com/600x400/3a0ca3/ffffff?text=Growing+System">
+                            <img src="https://via.placeholder.com/100x80/3a0ca3/ffffff?text=2" alt="Thumbnail 2">
+                        </div>
+                        <div class="thumbnail" data-image="https://via.placeholder.com/600x400/4cc9f0/ffffff?text=Selling+System">
+                            <img src="https://via.placeholder.com/100x80/4cc9f0/ffffff?text=3" alt="Thumbnail 3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <div class="product-badge">Encrypted</div>
+                    <h1 class="product-title">Weed System</h1>
+                    <div class="product-price">$25.00</div>
+                    
+                    <div class="product-description">
+                        <p>Complete marijuana growing and selling system with advanced features and realistic gameplay mechanics for your FiveM server.</p>
+                    </div>
+
+                    <div class="product-features">
+                        <h3>Key Features</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Realistic planting and growing system</li>
+                            <li><i class="fas fa-check"></i> Advanced selling mechanics</li>
+                            <li><i class="fas fa-check"></i> Police raid system integration</li>
+                            <li><i class="fas fa-check"></i> Customizable strains and effects</li>
+                            <li><i class="fas fa-check"></i> Support for ESX and QBCore</li>
+                        </ul>
+                    </div>
+
+                    <div class="product-requirements">
+                        <h3>Requirements</h3>
+                        <ul>
+                            <li><i class="fas fa-server"></i> ESX Framework or QBCore</li>
+                            <li><i class="fas fa-database"></i> MySQL Database</li>
+                            <li><i class="fas fa-code"></i> Latest FiveM Artifacts</li>
+                        </ul>
+                    </div>
+
+                    <div class="purchase-section">
+                        <button class="btn btn-primary btn-purchase" onclick="purchaseProduct('Weed System', 25)">
+                            <i class="fas fa-shopping-cart"></i> Purchase Now - $25
+                        </button>
+                        <div class="support-info">
+                            <p><i class="fab fa-discord"></i> After purchase, contact us on Discord: <strong>kjl9</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="description">Description</button>
+                    <button class="tab-btn" data-tab="features">Features</button>
+                    <button class="tab-btn" data-tab="installation">Installation</button>
+                </div>
+                
+                <div class="tabs-content">
+                    <div class="tab-pane active" id="description">
+                        <h3>Complete Weed System</h3>
+                        <p>This is the most advanced weed system available for FiveM. It includes everything you need to create a realistic marijuana economy on your server.</p>
+                        <p>Features include planting, growing, harvesting, processing, and selling with multiple levels of quality and effects.</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="features">
+                        <h3>Detailed Features</h3>
+                        <ul>
+                            <li><strong>Planting System:</strong> Choose different strains with unique effects</li>
+                            <li><strong>Growing Mechanics:</strong> Watering, fertilizing, and plant care</li>
+                            <li><strong>Processing:</strong> Dry, cure, and package your product</li>
+                            <li><strong>Selling:</strong> Dynamic pricing based on quality and demand</li>
+                            <li><strong>Police Integration:</strong> Raid system and evidence collection</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-pane" id="installation">
+                        <h3>Installation Guide</h3>
+                        <ol>
+                            <li>Download the script files after purchase</li>
+                            <li>Add the folder to your resources directory</li>
+                            <li>Add "ensure weed-system" to your server.cfg</li>
+                            <li>Configure the config.lua file to your needs</li>
+                            <li>Restart your server</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured" style="padding: 3rem 0;">
+        <div class="container">
+            <h2 class="section-title">Related Products</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-badge">Encrypted</div>
+                    <div class="product-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="product-title">Gang System</h3>
+                    <p class="product-description">Advanced gang management system with territories and wars</p>
+                    <div class="product-price">$30</div>
+                    <a href="product-gang.html" class="btn btn-product">View Details</a>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-badge">Open Source</div>
+                    <div class="product-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="product-title">FBI Job</h3>
+                    <p class="product-description">Complete FBI job system with investigations and advanced features</p>
+                    <div class="product-price">$20</div>
+                    <a href="product-fbi.html" class="btn btn-product">View Details</a>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Dream Store</h3>
+                    <p>Your trusted source for premium FiveM scripts and resources.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fab fa-discord"></i> Discord: kjl9</p>
+                    <p>We're here to help you 24/7</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Dream Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/product-detail.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
