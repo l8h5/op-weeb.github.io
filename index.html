@@ -1,80 +1,515 @@
 <!DOCTYPE html>
-<html lang="ar" data-theme="dark">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dream Store - متجر سكربتات FiveM</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dream Store — Clean Marketplace (عرض تجريبي)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --text: #0f1724;
+    --accent: #2563eb; /* ازرق احترافي */
+    --accent-2: #0ea5a4;
+    --radius: 12px;
+    --glass-border: rgba(15,23,36,0.04);
+    --shadow-sm: 0 6px 18px rgba(15,23,36,0.06);
+    --shadow-lg: 0 18px 40px rgba(15,23,36,0.08);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    min-height:100%;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:24px;
+  }
+
+  /* Header */
+  .header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:20px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo{
+    width:52px;height:52px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#1e40af);
+    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;box-shadow:var(--shadow-sm);
+  }
+  .title{
+    display:flex;flex-direction:column;
+  }
+  .title .main{font-weight:700;font-size:16px}
+  .title .sub{font-size:12px;color:var(--muted)}
+
+  /* Nav & actions */
+  .actions{display:flex;gap:12px;align-items:center}
+  .search{
+    display:flex;gap:8px;align-items:center;background:var(--card);padding:8px 12px;border-radius:12px;box-shadow:var(--shadow-sm);
+    border:1px solid var(--glass-border);
+  }
+  .search input{border:0;outline:none;background:transparent;min-width:220px;font-size:14px}
+  .btn{
+    background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:0;font-weight:600;cursor:pointer;
+    box-shadow:0 8px 20px rgba(37,99,235,0.12);
+  }
+  .btn.secondary{
+    background:transparent;color:var(--accent);border:1px solid rgba(37,99,235,0.12);
+  }
+  .icon-btn{background:transparent;border:1px solid var(--glass-border);padding:8px;border-radius:10px;cursor:pointer}
+
+  /* Layout */
+  .container{display:grid;grid-template-columns: 1fr 360px;gap:20px}
+  @media(max-width:980px){ .container{grid-template-columns:1fr} }
+
+  /* Main column */
+  .main{
+    display:flex;flex-direction:column;gap:18px;
+  }
+
+  /* Filters row */
+  .filters{display:flex;gap:12px;align-items:center}
+  .filter{
+    background:var(--card);padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);color:var(--muted);font-weight:600;
+  }
+
+  /* Product grid */
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:14px;
+  }
+  @media(max-width:1200px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:640px){ .grid{grid-template-columns:1fr} }
+
+  .product{
+    background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--glass-border);
+    box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:10px;
+  }
+  .product .thumb{
+    height:160px;border-radius:10px;background:linear-gradient(180deg,#eef2ff,#ffffff);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;
+  }
+  .product h3{margin:0;font-size:16px}
+  .product p{margin:0;color:var(--muted);font-size:13px}
+  .card-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+
+  /* Sidebar (account/cart/support) */
+  .side{
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--glass-border);box-shadow:var(--shadow-sm)}
+
+  /* Cart drawer / small UI */
+  .cart-list{display:flex;flex-direction:column;gap:10px;max-height:360px;overflow:auto;padding-right:6px}
+  .cart-item{display:flex;gap:10px;align-items:center;justify-content:space-between}
+  .cart-item .meta{display:flex;gap:8px;align-items:center}
+  .qty{background:#f3f4f6;padding:6px 8px;border-radius:8px;font-weight:600;color:var(--muted)}
+
+  /* Account: orders / licenses */
+  .section-title{font-weight:700;margin-bottom:8px}
+  .order{padding:10px;border-radius:8px;background:#f9fafb;border:1px solid rgba(15,23,36,0.03);display:flex;flex-direction:column;gap:6px}
+  .license{font-family:monospace;background:#0f1724;color:white;padding:6px 8px;border-radius:6px;font-size:13px;display:inline-block}
+
+  /* Support form */
+  .form-row{display:flex;flex-direction:column;gap:8px}
+  input,textarea,select{padding:10px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;outline:none;font-size:14px}
+  textarea{min-height:120px;resize:vertical}
+
+  /* Footer */
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* small helpers */
+  .muted{color:var(--muted)}
+  .small{font-size:13px;color:var(--muted)}
+  .pill{padding:6px 8px;border-radius:999px;background:#f8fafc;color:var(--muted);font-weight:700;font-size:13px}
+  .center{display:flex;align-items:center;justify-content:center}
+</style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">Dream Store</div>
-    <nav class="navbar">
-      <a href="#">الرئيسية</a>
-      <a href="#">المنتجات</a>
-      <a href="#">المدونة</a>
-      <a href="#">الدعم</a>
-      <a href="#">الحساب</a>
-    </nav>
-    <button class="theme-toggle">☀️</button>
-  </header>
 
-  <section class="hero glass-card">
-    <div class="hero-text">
-      <h1>سكربتات FiveM متطورة وآمنة</h1>
-      <p>تصميم عصري بتأثير زجاجي + دعم 24/7 + حماية كاملة</p>
-      <button class="button">استكشف</button>
+<!-- Header -->
+<header class="header">
+  <div class="brand">
+    <div class="logo">DS</div>
+    <div class="title">
+      <div class="main">Dream Store</div>
+      <div class="sub">متجر سكربتات FiveM — نظيف وموثوق</div>
     </div>
-    <div class="hero-image">
-      <img src="hero.png" alt="Dream Store Hero">
+  </div>
+
+  <div class="actions">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="search" placeholder="ابحث عن سكربت أو ميزة..." />
     </div>
+    <button class="btn secondary" id="go-products">عرض المنتجات</button>
+    <button class="btn" id="open-cart">السلة (<span id="cart-count">0</span>)</button>
+  </div>
+</header>
+
+<!-- Content -->
+<main class="container">
+
+  <!-- Main column -->
+  <section class="main">
+    <div class="card filters">
+      <div class="filter">الكل</div>
+      <div class="filter">الشرطة</div>
+      <div class="filter">مهمات</div>
+      <div class="filter">واجهات</div>
+      <div style="margin-left:auto" class="small muted">مرتب حسب: <strong>الأحدث</strong></div>
+    </div>
+
+    <div class="grid" id="productsGrid">
+      <!-- منتجات تُعرض عبر JS -->
+    </div>
+
+    <div class="card">
+      <div class="section-title">آراء العملاء</div>
+      <div class="small muted">"خدمة ممتازة والدعم سريع — أنصح بها لأي صاحب سيرفر" — محمد</div>
+    </div>
+
   </section>
 
-  <section class="products">
-    <h2>منتجات مميزة</h2>
-    <div class="product-grid">
-      <div class="glass-card product-card">
-        <img src="product1.png" alt="سكربت 1">
-        <h3>سكربت الشرطة</h3>
-        <p>ترخيص دائم + تحديثات مستقبلية</p>
-        <span class="price">50$</span>
-        <button class="button">شراء</button>
+  <!-- Sidebar -->
+  <aside class="side">
+    <div class="card">
+      <div class="section-title">السلة</div>
+      <div id="cartPreview" class="cart-list">
+        <div class="small muted center">السلة فارغة</div>
       </div>
-      <div class="glass-card product-card">
-        <img src="product2.png" alt="سكربت 2">
-        <h3>سكربت العصابات</h3>
-        <p>تصميم احترافي + دعم كامل</p>
-        <span class="price">45$</span>
-        <button class="button">شراء</button>
-      </div>
-      <!-- المزيد من المنتجات -->
-    </div>
-  </section>
-
-  <section class="testimonials glass-card">
-    <h2>آراء العملاء</h2>
-    <div class="stats">
-      <div class="stat">
-        <span class="number">500+</span>
-        <span class="label">عملاء</span>
-      </div>
-      <div class="stat">
-        <span class="number">95%</span>
-        <span class="label">تقييم إيجابي</span>
+      <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+        <div style="flex:1">
+          <div class="small muted">المجموع</div>
+          <div style="font-weight:700;font-size:18px" id="cartTotal">0 $</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn" id="checkoutBtn">الدفع</button>
+          <button class="btn secondary" id="clearCart">تفريغ</button>
+        </div>
       </div>
     </div>
-  </section>
 
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="#">من نحن</a>
-      <a href="#">الأسئلة الشائعة</a>
-      <a href="#">اتصل بنا</a>
-      <a href="#">الشروط</a>
+    <div class="card" id="accountCard">
+      <div class="section-title">حسابي</div>
+      <div class="small muted">الطلبات الأخيرة:</div>
+      <div id="ordersList" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <div class="small muted">لا توجد طلبات بعد</div>
+      </div>
     </div>
-    <p>© 2025 Dream Store. جميع الحقوق محفوظة.</p>
-  </footer>
 
-  <script src="script.js"></script>
+    <div class="card">
+      <div class="section-title">دعم سريع</div>
+      <div class="small muted">هل واجهت مشكلة؟ أنشئ تذكرة وسنرد خلال 24 ساعة.</div>
+      <button class="btn secondary" id="openSupport">فتح تذكرة</button>
+    </div>
+  </aside>
+
+</main>
+
+<!-- Modal: product detail -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px;z-index:999">
+  <div style="width:100%;max-width:920px;border-radius:12px;background:var(--card);padding:18px;border:1px solid var(--glass-border);box-shadow:var(--shadow-lg);">
+    <div style="display:flex;gap:18px">
+      <div style="flex:1">
+        <div id="modalThumb" style="height:260px;border-radius:10px;background:linear-gradient(180deg,#f8fafc,#fff);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700"></div>
+      </div>
+      <div style="width:360px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div id="modalTitle" style="font-weight:700;font-size:18px"></div>
+            <div id="modalTag" class="small muted"></div>
+          </div>
+          <div style="text-align:left">
+            <div style="font-size:14px;color:var(--muted)">السعر</div>
+            <div id="modalPrice" style="font-weight:800;font-size:18px;color:var(--accent)"></div>
+          </div>
+        </div>
+        <div id="modalDesc" style="color:var(--muted);line-height:1.45"></div>
+        <div style="margin-top:auto;display:flex;gap:8px">
+          <button class="btn" id="modalBuy">أضف إلى السلة</button>
+          <button class="btn secondary" id="modalClose">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Support modal -->
+<div id="supportModal" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.45);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:20px;z-index:1000">
+  <div style="width:100%;max-width:700px;background:var(--card);padding:18px;border-radius:12px;border:1px solid var(--glass-border);box-shadow:var(--shadow-lg)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-weight:700">إنشاء تذكرة دعم</div>
+      <button class="icon-btn" id="closeSupport">X</button>
+    </div>
+    <div class="form-row">
+      <label class="small muted">الموضوع</label>
+      <input id="ticketSubject" placeholder="مثال: مشكلة تثبيت السكربت" />
+      <label class="small muted">التفاصيل</label>
+      <textarea id="ticketBody" placeholder="اشرح مشكلتك بالتفصيل..."></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-start">
+        <button class="btn" id="createTicket">إنشاء التذكرة</button>
+        <button class="btn secondary" id="cancelTicket">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Simple Notifications -->
+<div id="toast" style="position:fixed;left:24px;bottom:24px;z-index:1200"></div>
+
+<footer>
+  © 2025 Dream Store — نسخة عرض. جميع الحقوق محفوظة.
+</footer>
+
+<script>
+/* =========== بيانات مبدئية =========== */
+const PRODUCTS = [
+  { id: 'p1', title: 'سكربت الشرطة الكامل', price: 59, tag: 'الشرطة', desc:'نظام شرطة متكامل مع مهام، رادار، ونظام مكمّل للايفنتات.' },
+  { id: 'p2', title: 'سكربت العصابات', price: 45, tag: 'مهمات', desc:'مهام عصابات متقدمة، اقتصاد غنائم، نظام تحالف.' },
+  { id: 'p3', title: 'واجهة متجر داخلية (NUI)', price: 29, tag: 'واجهات', desc:'واجهة احترافية قابلة للتعديل لصفحات الشراء داخل اللعبة.' },
+  { id: 'p4', title: 'نظام اقتصاد متقدم', price: 39, tag: 'اقتصاد', desc:'اقتصاد ادوات، تاجر، مصارف، وقوانين ضرائب.' },
+  { id: 'p5', title: 'حزمة مهام PvE', price: 24, tag: 'مهمات', desc:'سلسلة مهام PvE قابلة للتخصيص.' },
+  { id: 'p6', title: 'أدوات المطور (API)', price: 19, tag: 'أدوات', desc:'مكتبة مساعدة لربط السكربتات مع أنظمة خارجية.' }
+];
+
+let CART = JSON.parse(localStorage.getItem('ds_cart')||'{}'); // {id:qty}
+let ORDERS = JSON.parse(localStorage.getItem('ds_orders')||'[]'); // array orders
+let TICKETS = JSON.parse(localStorage.getItem('ds_tickets')||'[]');
+
+/* =========== Helpers =========== */
+function q(sel){ return document.querySelector(sel) }
+function notify(msg, color){ const t = document.createElement('div'); t.textContent=msg; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.color='white'; t.style.marginTop='8px'; t.style.background = color||'linear-gradient(90deg,var(--accent),#1e40af)'; document.getElementById('toast').appendChild(t); setTimeout(()=>t.remove(),2600); }
+
+/* =========== Render Products =========== */
+function renderProducts(list = PRODUCTS){
+  const grid = q('#productsGrid');
+  grid.innerHTML = '';
+  for(const p of list){
+    const card = document.createElement('div'); card.className='product';
+    card.innerHTML = `
+      <div class="thumb">صورة ${p.id.toUpperCase()}</div>
+      <h3>${p.title}</h3>
+      <p>${p.desc}</p>
+      <div class="card-row">
+        <div class="small muted">${p.tag}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="font-weight:800">${p.price} $</div>
+          <button class="icon-btn" data-id="${p.id}" title="معاينة">عرض</button>
+          <button class="btn" data-buy="${p.id}">أضف للسلة</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  }
+
+  // Events
+  document.querySelectorAll('[data-buy]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      addToCart(e.currentTarget.dataset.buy);
+    });
+  });
+  document.querySelectorAll('[data-id]').forEach(b=>{
+    b.addEventListener('click', e=>{
+      openModal(e.currentTarget.dataset.id);
+    });
+  });
+}
+
+/* =========== Cart Management =========== */
+function saveCart(){ localStorage.setItem('ds_cart', JSON.stringify(CART)); renderCart(); updateCartCount(); }
+function addToCart(id){
+  CART[id] = (CART[id]||0) + 1;
+  saveCart();
+  notify('تمت إضافة المنتج إلى السلة');
+}
+function removeFromCart(id){
+  delete CART[id];
+  saveCart();
+}
+function changeQty(id, delta){
+  CART[id] = Math.max(1, (CART[id]||0) + delta);
+  if(CART[id] <= 0) delete CART[id];
+  saveCart();
+}
+function clearCart(){ CART = {}; saveCart(); notify('تم تفريغ السلة','linear-gradient(90deg,#ef4444,#f97316)') }
+
+function renderCart(){
+  const preview = q('#cartPreview');
+  preview.innerHTML = '';
+  const ids = Object.keys(CART);
+  if(ids.length === 0){ preview.innerHTML = '<div class="small muted center">السلة فارغة</div>'; q('#cartTotal').textContent = '0 $'; return; }
+  let total = 0;
+  for(const id of ids){
+    const p = PRODUCTS.find(x=>x.id===id); if(!p) continue;
+    const qty = CART[id];
+    total += p.price * qty;
+    const item = document.createElement('div'); item.className='cart-item';
+    item.innerHTML = `
+      <div class="meta">
+        <div style="width:60px;height:48px;border-radius:8px;background:#fff;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--muted)">${p.id.toUpperCase()}</div>
+        <div>
+          <div style="font-weight:700">${p.title}</div>
+          <div class="small muted">${p.price}$ × ${qty}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="icon-btn" data-dec="${id}">-</button>
+        <div class="qty">${qty}</div>
+        <button class="icon-btn" data-inc="${id}">+</button>
+        <button class="icon-btn" data-del="${id}">×</button>
+      </div>
+    `;
+    preview.appendChild(item);
+  }
+  q('#cartTotal').textContent = total + ' $';
+
+  // cart controls
+  preview.querySelectorAll('[data-inc]').forEach(btn=> btn.addEventListener('click', e=> { changeQty(e.currentTarget.dataset.inc, +1); }));
+  preview.querySelectorAll('[data-dec]').forEach(btn=> btn.addEventListener('click', e=> { changeQty(e.currentTarget.dataset.dec, -1); }));
+  preview.querySelectorAll('[data-del]').forEach(btn=> btn.addEventListener('click', e=> { removeFromCart(e.currentTarget.dataset.del); }));
+}
+
+function updateCartCount(){
+  const count = Object.values(CART).reduce((s,n)=>s+n,0);
+  q('#cart-count').textContent = count;
+}
+
+/* =========== Modal: product detail =========== */
+function openModal(id){
+  const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+  q('#modalTitle').textContent = p.title;
+  q('#modalDesc').textContent = p.desc;
+  q('#modalPrice').textContent = p.price + ' $';
+  q('#modalTag').textContent = p.tag;
+  q('#modalThumb').textContent = p.id.toUpperCase();
+  q('#modal').style.display = 'flex';
+  q('#modalBuy').dataset.id = p.id;
+}
+function closeModal(){ q('#modal').style.display = 'none'; }
+
+/* =========== Checkout flow (simulate license generation) =========== */
+function generateLicenseKey(){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const group = ()=>Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `${group()}-${group()}-${group()}`;
+}
+
+function checkout(){
+  const items = Object.keys(CART);
+  if(items.length === 0){ notify('السلة فارغة'); return; }
+  const order = {
+    id: 'ORD' + Date.now().toString().slice(-6),
+    date: new Date().toLocaleString('ar-EG'),
+    items: [],
+    total: 0
+  };
+  for(const id of items){
+    const p = PRODUCTS.find(x=>x.id===id);
+    const qty = CART[id];
+    const licenses = [];
+    for(let i=0;i<qty;i++){
+      licenses.push(generateLicenseKey());
+    }
+    order.items.push({ id: p.id, title: p.title, price: p.price, qty, licenses });
+    order.total += p.price * qty;
+  }
+  ORDERS.unshift(order);
+  localStorage.setItem('ds_orders', JSON.stringify(ORDERS));
+  CART = {}; localStorage.setItem('ds_cart', JSON.stringify(CART));
+  renderCart(); updateCartCount(); renderOrders();
+  notify('تمت عملية الشراء. تم إنشاء التراخيص بنجاح');
+  // Show order summary
+  let summary = `تم إنشاء الطلب ${order.id}\n\n`;
+  for(const it of order.items){
+    summary += `${it.title} × ${it.qty}\n`;
+    for(const L of it.licenses) summary += `• ${L}\n`;
+  }
+  alert(summary);
+}
+
+/* =========== Orders render (Account) =========== */
+function renderOrders(){
+  const container = q('#ordersList');
+  container.innerHTML = '';
+  if(ORDERS.length === 0){ container.innerHTML = '<div class="small muted">لا توجد طلبات بعد</div>'; return; }
+  for(const o of ORDERS){
+    const el = document.createElement('div'); el.className='order';
+    let html = `<div style="display:flex;justify-content:space-between"><div style="font-weight:700">${o.id}</div><div class="small muted">${o.date}</div></div>`;
+    for(const it of o.items){
+      html += `<div style="display:flex;justify-content:space-between"><div>${it.title} × ${it.qty}</div><div style="font-weight:800">${it.price * it.qty} $</div></div>`;
+      html += `<div style="margin-top:6px">`;
+      for(const L of it.licenses) html += `<span class="license">${L}</span> `;
+      html += `</div>`;
+    }
+    html += `<div class="small muted">المجموع: ${o.total} $</div>`;
+    el.innerHTML = html;
+    container.appendChild(el);
+  }
+}
+
+/* =========== Support tickets =========== */
+function createTicket(){
+  const subject = q('#ticketSubject').value.trim();
+  const body = q('#ticketBody').value.trim();
+  if(!subject || !body){ notify('أدخل الموضوع والتفاصيل'); return; }
+  const t = { id: 'TKT' + Date.now().toString().slice(-5), subject, body, status:'Open', date: new Date().toLocaleString('ar-EG') };
+  TICKETS.unshift(t);
+  localStorage.setItem('ds_tickets', JSON.stringify(TICKETS));
+  notify('تم إنشاء التذكرة. سنراجعها قريباً');
+  q('#ticketSubject').value = ''; q('#ticketBody').value = '';
+  closeSupport();
+}
+
+/* =========== Init / Events =========== */
+renderProducts();
+renderCart();
+updateCartCount();
+renderOrders();
+
+// events
+q('#modalClose').addEventListener('click', closeModal);
+q('#modalBuy').addEventListener('click', (e)=>{ addToCart(e.currentTarget.dataset.id); closeModal(); });
+
+q('#open-cart').addEventListener('click', ()=>{ window.scrollTo({top:0,behavior:'smooth'}); q('#cartPreview').scrollIntoView(); notify('تم فتح السلة') });
+q('#checkoutBtn').addEventListener('click', ()=>{ if(confirm('متابعة الدفع محاكاة؟')) checkout(); });
+q('#clearCart').addEventListener('click', ()=>{ if(confirm('هل تريد تفريغ السلة؟')) clearCart(); });
+
+q('#openSupport').addEventListener('click', ()=>{ q('#supportModal').style.display='flex'; });
+q('#closeSupport').addEventListener('click', ()=>{ closeSupport(); });
+q('#cancelTicket').addEventListener('click', ()=>{ closeSupport(); });
+q('#createTicket').addEventListener('click', createTicket);
+
+function closeSupport(){ q('#supportModal').style.display='none'; }
+
+/* Search */
+q('#search').addEventListener('input', (e)=>{
+  const qv = e.target.value.trim().toLowerCase();
+  if(!qv) return renderProducts();
+  const found = PRODUCTS.filter(p => p.title.toLowerCase().includes(qv) || p.desc.toLowerCase().includes(qv) || p.tag.toLowerCase().includes(qv));
+  renderProducts(found);
+});
+
+/* go products button */
+q('#go-products').addEventListener('click', ()=>{ window.scrollTo({top: document.querySelector('.main').offsetTop, behavior:'smooth'}) });
+
+/* load stored orders/tickets on start */
+ORDERS = JSON.parse(localStorage.getItem('ds_orders')||'[]'); renderOrders();
+TICKETS = JSON.parse(localStorage.getItem('ds_tickets')||'[]');
+
+</script>
 </body>
 </html>
