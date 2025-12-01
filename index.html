@@ -74,68 +74,145 @@
   /* Layout */
   .container{display:grid;grid-template-columns: 1fr 360px;gap:20px}
   @media(max-width:980px){ .container{grid-template-columns:1fr} }
+/* ---------- Responsive additions (paste after your existing CSS) ---------- */
 
-  /* Main column */
-  .main{
-    display:flex;flex-direction:column;gap:18px;
-  }
+/* 1) Breakpoints & helper variables (mobile-first) */
+:root{
+  --bp-xs: 480px;
+  --bp-sm: 640px;
+  --bp-md: 980px;
+  --bp-lg: 1200px;
+  --bp-xl: 1600px;
 
-  /* Filters row */
-  .filters{display:flex;gap:12px;align-items:center}
-  .filter{
-    background:var(--card);padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);color:var(--muted);font-weight:600;
-  }
+  /* container widths */
+  --container-sm: 720px;
+  --container-md: 980px;
+  --container-lg: 1200px;
+  --container-xl: 1440px;
+}
 
-  /* Product grid */
-  .grid{
-    display:grid;
-    grid-template-columns: repeat(3,1fr);
-    gap:14px;
-  }
-  @media(max-width:1200px){ .grid{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:640px){ .grid{grid-template-columns:1fr} }
+/* 2) Fluid / responsive base font sizing (keeps text legible across screens) */
+html{
+  /* fallback base then fluid using vw */
+  font-size: clamp(14px, 1.2vw + 12px, 18px);
+  -webkit-text-size-adjust: 100%;
+}
 
-  .product{
-    background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--glass-border);
-    box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:10px;
-  }
-  .product .thumb{
-    height:160px;border-radius:10px;background:linear-gradient(180deg,#eef2ff,#ffffff);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;
-  }
-  .product h3{margin:0;font-size:16px}
-  .product p{margin:0;color:var(--muted);font-size:13px}
-  .card-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+/* Prefer rems where possible (optional): you can convert px -> rem in components later */
 
-  /* Sidebar (account/cart/support) */
+/* 3) Max-width container center + consistent side padding */
+.page-wrapper, .container{
+  max-width: var(--container-lg);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* 4) Make .grid fully responsive using auto-fit */
+.grid{
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* keeps gap consistent */
+  gap: 14px;
+}
+
+/* Thumb responsive height */
+.product .thumb{
+  height: clamp(120px, 18vw, 220px);
+}
+
+/* Search input responsive width */
+.search input{
+  min-width: 0;
+  width: clamp(120px, 30vw, 420px);
+}
+
+/* Buttons and pills scale slightly */
+.btn, .pill{
+  padding: clamp(8px, 0.9vw, 12px) clamp(10px, 1.6vw, 18px);
+  border-radius: clamp(8px, 1vw, 12px);
+}
+
+/* Sidebar behavior: collapse under main on small screens */
+@media (max-width: 980px){
+  .container{
+    grid-template-columns: 1fr; /* existing rule kept but ensure order */
+  }
   .side{
-    display:flex;flex-direction:column;gap:12px;
+    order: 2;
+    width: 100%;
   }
-  .card{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--glass-border);box-shadow:var(--shadow-sm)}
+  .main{ order: 1; }
+  /* make sidebar cards full width */
+  .side .card{ width:100% }
+}
 
-  /* Cart drawer / small UI */
-  .cart-list{display:flex;flex-direction:column;gap:10px;max-height:360px;overflow:auto;padding-right:6px}
-  .cart-item{display:flex;gap:10px;align-items:center;justify-content:space-between}
-  .cart-item .meta{display:flex;gap:8px;align-items:center}
-  .qty{background:#f3f4f6;padding:6px 8px;border-radius:8px;font-weight:600;color:var(--muted)}
+/* For very small screens, tighten paddings and stack filters */
+@media (max-width: 640px){
+  body{ padding:12px; }
+  .header{ gap:10px; align-items:flex-start; }
+  .brand .logo{ width:44px; height:44px; font-size:16px; }
+  .filters{ flex-wrap:wrap; gap:8px; }
+  .search input{ font-size:14px; }
+  .grid{ gap:12px; }
+}
 
-  /* Account: orders / licenses */
-  .section-title{font-weight:700;margin-bottom:8px}
-  .order{padding:10px;border-radius:8px;background:#f9fafb;border:1px solid rgba(15,23,36,0.03);display:flex;flex-direction:column;gap:6px}
-  .license{font-family:monospace;background:#0f1724;color:white;padding:6px 8px;border-radius:6px;font-size:13px;display:inline-block}
+/* Large screens: expand container and increase grid columns if space available */
+@media (min-width:1200px){
+  .page-wrapper, .container{ max-width: var(--container-xl); }
+  .grid{ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
 
-  /* Support form */
-  .form-row{display:flex;flex-direction:column;gap:8px}
-  input,textarea,select{padding:10px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;outline:none;font-size:14px}
-  textarea{min-height:120px;resize:vertical}
+/* Ultra wide: give more breathing room */
+@media (min-width:1600px){
+  body{ padding:36px; }
+  .logo{ width:64px; height:64px; font-size:20px; border-radius:14px; }
+  .product .thumb{ height:260px; }
+}
 
-  /* Footer */
-  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+/* 5) Utility classes (use them in markup to quickly hide/show) */
+.hidden-xs{ display:none !important; }        /* hide on extra small */
+.visible-xs{ display:block !important; }
 
-  /* small helpers */
-  .muted{color:var(--muted)}
-  .small{font-size:13px;color:var(--muted)}
-  .pill{padding:6px 8px;border-radius:999px;background:#f8fafc;color:var(--muted);font-weight:700;font-size:13px}
-  .center{display:flex;align-items:center;justify-content:center}
+@media (min-width:480px){
+  .hidden-xs{ display:block !important; }
+  .visible-xs{ display:none !important; }
+}
+
+/* Show only on desktop */
+.hidden-md{ display:none !important; }
+@media (min-width:981px){ .hidden-md{ display:block !important; } }
+
+/* stack helpers */
+.stack-v{ display:flex; flex-direction:column; gap:12px; }
+
+/* 6) Accessibility & interaction improvements */
+:focus{ outline: none; }
+:focus-visible{ outline: 3px solid rgba(37,99,235,0.18); outline-offset: 3px; border-radius:8px; }
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* 7) Small component tweaks for better responsiveness */
+.cart-list{ max-height: clamp(160px, 32vh, 420px); }
+.qty{ padding:6px 10px; font-size:0. nine rem; } /* adjust if you convert to rem */
+
+
+/* 8) Example: responsive header layout (compact on small screens) */
+.header{
+  align-items:center;
+  gap:12px;
+}
+@media (max-width:640px){
+  .header{ flex-direction:column; align-items:stretch; gap:10px; }
+  .actions{ justify-content:space-between; width:100%; }
+  .search{ width:100%; justify-content:space-between; }
+}
+
+/* 9) Helpful note class to debug layout (remove in production) */
+.debug-grid{ outline:1px dashed rgba(15,23,36,0.04); }
 </style>
 </head>
 <body>
@@ -513,3 +590,4 @@ TICKETS = JSON.parse(localStorage.getItem('ds_tickets')||'[]');
 </script>
 </body>
 </html>
+
