@@ -1,251 +1,82 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dream Store — Clean Marketplace</title>
-  <meta name="description" content="متجر سكربتات FiveM — نظيف وموثوق" />
-
-  <style>
-    :root{
-      --bg:#0f1724; /* dark navy */
-      --card:#0b1220;
-      --muted:#9aa4b2;
-      --accent:#7c3aed;
-      --glass: rgba(255,255,255,0.04);
-      --radius:12px;
-      --container:1200px;
-      --gap:18px;
-      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    }
-
-    html,body{height:100%;}
-    body{
-      margin:0; padding:24px; background:linear-gradient(180deg,#071025 0%, #071728 100%); color:#e6eef8; -webkit-font-smoothing:antialiased;
-      box-sizing:border-box; direction:rtl;
-    }
-    *{box-sizing:border-box}
-
-    .wrap{max-width:var(--container); margin:0 auto;}
-
-    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px}
-    .brand{display:flex; align-items:center; gap:12px}
-    .logo{width:54px; height:54px; border-radius:10px; background:linear-gradient(135deg,var(--accent),#4f46e5); display:flex; align-items:center; justify-content:center; font-weight:700}
-    .brand h1{font-size:18px; margin:0}
-    .brand p{margin:0; font-size:12px; color:var(--muted)}
-
-    nav{display:flex; gap:10px; align-items:center}
-    nav button{background:transparent; color:var(--muted); border:1px solid transparent; padding:8px 12px; border-radius:10px; font-size:14px}
-    nav button.active{color:#fff; border-color:rgba(255,255,255,0.06); background:var(--glass)}
-
-    .controls{display:flex; gap:12px; align-items:center}
-    .select{background:var(--card); border-radius:10px; padding:8px 12px; font-size:14px}
-
-    main{display:grid; grid-template-columns: 1fr 320px; gap:22px; align-items:start}
-
-    /* product grid */
-    .products{background:transparent;}
-    .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
-
-    @media(min-width:960px){ .grid{grid-template-columns:repeat(3,1fr)} }
-    @media(min-width:1280px){ .grid{grid-template-columns:repeat(4,1fr)} }
-
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:14px; border-radius:var(--radius); display:flex; flex-direction:column; gap:10px}
-    .thumb{height:140px; border-radius:10px; background:linear-gradient(90deg,#0b1220,#071028); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--muted)}
-    .meta{display:flex; justify-content:space-between; align-items:center}
-    .title{font-weight:600}
-    .price{font-weight:700}
-    .actions{display:flex; gap:8px}
-    .btn{padding:8px 10px; border-radius:10px; background:var(--accent); color:white; border:none; cursor:pointer}
-    .btn.ghost{background:transparent; border:1px solid rgba(255,255,255,0.06)}
-
-    /* sidebar (cart) */
-    aside.cart{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); padding:14px; border-radius:var(--radius); min-height:200px}
-    .cart h3{margin:0 0 8px 0}
-    .cart .empty{color:var(--muted); padding:20px; border-radius:10px; background:rgba(255,255,255,0.01); text-align:center}
-
-    footer{margin-top:28px; color:var(--muted); font-size:13px; text-align:center}
-
-    /* modal ticket */
-    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.6)); padding:20px}
-    .modal.is-open{display:flex}
-    .modal .box{width:100%; max-width:680px; background:var(--card); padding:18px; border-radius:14px}
-
-    /* small tweaks for accessibility */
-    button, select{font-family:inherit}
-
-    /* make text scale nicely on small screens */
-    @media(max-width:760px){
-      header{flex-direction:column; align-items:flex-start}
-      main{grid-template-columns:1fr;}
-      .thumb{height:120px}
-    }
-
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dream Store — متجر سكربتات FiveM</title>
+<link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">DS</div>
-        <div>
-          <h1>Dream Store</h1>
-          <p>متجر سكربتات FiveM — نظيف وموثوق</p>
-        </div>
-      </div>
-
-      <div class="controls">
-        <nav>
-          <button class="active">الكل</button>
-          <button>الشرطة</button>
-          <button>مهمات</button>
-          <button>واجهات</button>
-        </nav>
-
-        <select class="select" aria-label="ترتيب">
-          <option>مرتب حسب: الأحدث</option>
-          <option>الأعلى تقييماً</option>
-        </select>
-
-        <div style="display:flex; gap:8px; align-items:center">
-          <button class="btn ghost" id="open-cart">السلة (0)</button>
-          <button class="btn" id="open-ticket">فتح تذكرة</button>
-        </div>
-      </div>
-    </header>
-
-    <main>
-      <section class="products">
-        <div style="margin-bottom:12px; color:var(--muted);">آراء العملاء</div>
-
-        <div class="grid" id="product-grid">
-          <!-- sample products injected by script -->
-        </div>
-      </section>
-
-      <aside class="cart" id="cart">
-        <h3>السلة</h3>
-        <div class="empty" id="cart-empty">السلة فارغة</div>
-        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center">
-          <div>المجموع</div>
-          <div id="cart-total">0 $</div>
-        </div>
-        <div style="margin-top:12px; display:flex; gap:8px;">
-          <button class="btn" id="checkout">الدفع</button>
-          <button class="btn ghost" id="clear-cart">تفريغ</button>
-        </div>
-
-        <hr style="margin:12px 0; opacity:0.04" />
-        <div style="font-size:13px">حسابي</div>
-        <div style="font-size:13px; color:var(--muted); margin-top:8px">الطلبات الأخيرة:<br>لا توجد طلبات بعد</div>
-
-        <hr style="margin:12px 0; opacity:0.04" />
-        <div style="font-size:13px">دعم سريع</div>
-        <div style="font-size:13px; color:var(--muted); margin-top:6px">هل واجهت مشكلة؟ أنشئ تذكرة وسنرد خلال 24 ساعة.</div>
-      </aside>
-    </main>
-
-    <footer>
-      © 2025 Dream Store — نسخة عرض. جميع الحقوق محفوظة.
-    </footer>
-  </div>
-
-  <!-- ticket modal -->
-  <div class="modal" id="ticket-modal" role="dialog" aria-hidden="true">
-    <div class="box">
-      <h2>إنشاء تذكرة دعم</h2>
-      <p style="color:var(--muted);">إذا واجهت مشكلة، اكتب تفاصيل الموضوع أدناه وسنرد خلال 24 ساعة.</p>
-      <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px">
-        <input id="ticket-subj" placeholder="الموضوع" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:inherit" />
-        <textarea id="ticket-body" rows="6" placeholder="التفاصيل" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:inherit"></textarea>
-        <div style="display:flex; gap:10px; justify-content:flex-start">
-          <button class="btn" id="send-ticket">إنشاء التذكرة</button>
-          <button class="btn ghost" id="close-ticket">إلغاء</button>
-        </div>
+<body class="page-rtl">
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="logo">DS</div>
+      <div class="brand-text">
+        <h1>Dream Store</h1>
+        <p class="muted">متجر سكربتات وخدمات FiveM</p>
       </div>
     </div>
+
+    <nav class="main-nav">
+      <a href="index.html" class="active">الرئيسية</a>
+      <a href="products.html">المنتجات</a>
+      <a href="support.html">الدعم</a>
+      <a href="about.html">من نحن</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="lang-toggle" class="ghost">EN</button>
+      <button id="cart-btn" class="icon-btn" aria-label="Cart">🛒<span id="cart-count" class="badge">0</span></button>
+    </div>
   </div>
+</header>
 
-  <script>
-    // --- sample data (replace with real feed) ---
-    const PRODUCTS = [
-      {id:1, title:'نظام الشرطة المتكامل', price:12, cat:'شرطة', desc:'نظام إدارة شرطة كامل مع لوحة تحكم'},
-      {id:2, title:'مهمات قصصية', price:8, cat:'مهمات', desc:'سلسلة مهمات ترفيهية للاعبين'},
-      {id:3, title:'واجهة متجر بسيطة', price:6, cat:'واجهات', desc:'UI نظيف وخفيف لواجهة المتجر'},
-      {id:4, title:'حزمة سيارات', price:4, cat:'مهمات', desc:'مجموعة سيارات جديدة'}
-    ];
+<main class="container">
+  <section class="hero">
+    <div class="hero-left">
+      <h2>سكربتات وخدمات احترافية لسيرفرات FiveM</h2>
+      <p class="muted">نظام متجر بسيط، دعم سريع، وترخيص واضح لكل منتج.</p>
+      <a href="products.html" class="btn">تصفح المنتجات</a>
+    </div>
+    <div class="hero-right">
+      <img src="assets/hero-placeholder.png" alt="hero image">
+    </div>
+  </section>
 
-    const grid = document.getElementById('product-grid');
-    const cartBtn = document.getElementById('open-cart');
-    const cartEmpty = document.getElementById('cart-empty');
-    const cartTotalEl = document.getElementById('cart-total');
-    const clearBtn = document.getElementById('clear-cart');
-    const checkout = document.getElementById('checkout');
+  <section>
+    <h3>منتجات مميزة</h3>
+    <div id="featured-grid" class="grid"></div>
+  </section>
 
-    let cart = [];
+  <section class="why">
+    <h3>لماذا تختار Dream Store؟</h3>
+    <ul>
+      <li>منتجات مرخّصة أو مطورة داخليًا</li>
+      <li>دعم عبر تذكرة وديسكورد</li>
+      <li>تعليمات تثبيت واضحة</li>
+    </ul>
+  </section>
+</main>
 
-    function renderProducts(){
-      grid.innerHTML = '';
-      PRODUCTS.forEach(p=>{
-        const el = document.createElement('article');
-        el.className='card';
-        el.innerHTML = `
-          <div class="thumb">${p.title}</div>
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <div>
-              <div class="title">${p.title}</div>
-              <div style="font-size:13px; color:var(--muted)">${p.desc}</div>
-            </div>
-            <div style="text-align:left">
-              <div class="price">${p.price} $</div>
-              <div class="actions">
-                <button class="btn" data-add="${p.id}">أضف إلى السلة</button>
-              </div>
-            </div>
-          </div>
-        `;
-        grid.appendChild(el);
-      });
-    }
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>© 2025 Dream Store</div>
+    <div><a href="terms.html">الشروط والاحكام</a> • <a href="about.html">عن المتجر</a></div>
+  </div>
+</footer>
 
-    function updateCartUI(){
-      if(cart.length===0){ cartEmpty.style.display='block'; } else { cartEmpty.style.display='none'; }
-      const total = cart.reduce((s,i)=>s+i.price,0);
-      cartTotalEl.textContent = total + ' $';
-      cartBtn.textContent = `السلة (${cart.length})`;
-    }
+<!-- Cart drawer -->
+<div id="cart-drawer" class="drawer" aria-hidden="true">
+  <div class="drawer-inner">
+    <h4>السلة</h4>
+    <div id="cart-list"></div>
+    <div class="drawer-footer">
+      <div class="muted">المجموع: <span id="cart-total">0 $</span></div>
+      <a id="checkout-btn" class="btn">اطلب الآن</a>
+    </div>
+  </div>
+</div>
 
-    document.addEventListener('click', e=>{
-      const add = e.target.closest('[data-add]');
-      if(add){
-        const id = Number(add.getAttribute('data-add'));
-        const p = PRODUCTS.find(x=>x.id===id);
-        cart.push(p);
-        updateCartUI();
-      }
-    });
-
-    clearBtn.addEventListener('click', ()=>{ cart = []; updateCartUI(); });
-    checkout.addEventListener('click', ()=>{ if(cart.length===0){ alert('السلة فارغة'); return } alert('انتقل لصفحة الدفع (وهمية في هذا العرض)'); });
-
-    // ticket modal
-    const ticketModal = document.getElementById('ticket-modal');
-    document.getElementById('open-ticket').addEventListener('click', ()=>{ ticketModal.classList.add('is-open'); ticketModal.setAttribute('aria-hidden','false'); });
-    document.getElementById('close-ticket').addEventListener('click', ()=>{ ticketModal.classList.remove('is-open'); ticketModal.setAttribute('aria-hidden','true'); });
-    document.getElementById('send-ticket').addEventListener('click', ()=>{
-      const subj = document.getElementById('ticket-subj').value.trim();
-      const body = document.getElementById('ticket-body').value.trim();
-      if(!subj || !body){ alert('اكتب الموضوع والتفاصيل'); return }
-      // fake send
-      alert('تم إنشاء التذكرة — شكراً');
-      document.getElementById('ticket-subj').value=''; document.getElementById('ticket-body').value='';
-      ticketModal.classList.remove('is-open'); ticketModal.setAttribute('aria-hidden','true');
-    });
-
-    // initialize
-    renderProducts();
-    updateCartUI();
-
-  </script>
+<script src="js/app.js"></script>
 </body>
 </html>
